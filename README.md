@@ -68,3 +68,101 @@ services:
 ```bash
 docker-compose up -d
 ```
+
+### Build the Docker Image for Data Ingestion
+
+1. Use the provided Dockerfile:
+```Dockerfile
+FROM python:3.9.1
+
+RUN apt-get install wget
+RUN pip install pandas sqlalchemy psycopg2
+
+WORKDIR /app
+COPY ingest_data.py ingest_data.py 
+
+ENTRYPOINT [ "python", "ingest_data.py" ]
+```
+
+2. Build the Docker image:
+
+```bash
+docker build -t taxi_ingest:v001 .
+```
+
+## Data Ingestion
+
+### Download the Data
+
+```bash
+wget https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz
+```
+
+### Run the Data Ingestion Script Locally
+```bash
+python ingest_data.py \
+  --user=root \
+  --password=root \
+  --host=localhost \
+  --port=5432 \
+  --db=ny_taxi \
+  --table_name=yellow_taxi_trips \
+  --url=https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz
+```
+
+### Run the Script Using Docker
+```bash
+docker run -it \
+  --network=pg-network \
+  taxi_ingest:v001 \
+    --user=root \
+    --password=root \
+    --host=pg-database \
+    --port=5432 \
+    --db=ny_taxi \
+    --table_name=yellow_taxi_trips \
+    --url=https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz
+```
+
+## PostgreSQL and pgAdmin Usage
+
+### Access pgAdmin
+1. Open your browser and navigate to `http://localhost:8080`.
+Use the default credentials:
+Email: `admin@admin.com`
+Password: `root`
+
+## SQL Queries
+
+Here are some useful SQL queries to get started:
+
+### Query 1: Count Trips Per Day
+```SQL
+SELECT
+    CAST(tpep_dropoff_datetime AS DATE) AS day,
+    COUNT(1) AS trip_count
+FROM yellow_taxi_trips
+GROUP BY day
+ORDER BY trip_count DESC;
+```
+
+### Query 2: Join Trips with Zone Information
+
+```SQL
+SELECT
+    tpep_pickup_datetime,
+    tpep_dropoff_datetime,
+    total_amount,
+    zpu.Zone AS pickup_zone,
+    zdo.Zone AS dropoff_zone
+FROM yellow_taxi_trips AS t
+JOIN zones AS zpu ON t.PULocationID = zpu.LocationID
+JOIN zones AS zdo ON t.DOLocationID = zdo.LocationID
+LIMIT 100;
+```
+
+## References
+
+* [NYC Taxi Data](https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page)
+* [PostgreSQL Documentation](https://www.postgresql.org/docs/)
+* [pgAdmin Documentation](https://www.pgadmin.org/docs/)
