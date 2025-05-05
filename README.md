@@ -42,6 +42,7 @@ cd data-engineering-zoomcamp/01-docker-terraform/2_docker_sql
 
 ### Setting Up PostgreSQL with Docker Compose
 
+1. Use the provided docker-compose.yaml file:
 ```yaml
 services:
   pgdatabase:
@@ -61,4 +62,9 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=root
     ports:
       - "8080:80"
-      ```
+```
+
+2. Start the services:
+```bash
+docker-compose up -d
+```
