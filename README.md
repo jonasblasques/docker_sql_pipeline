@@ -21,10 +21,15 @@ This project demonstrates how to set up a PostgreSQL database with Docker, inges
 
 ## Overview
 
-The project focuses on deploying PostgreSQL using Docker and Docker Compose. It includes tools and scripts for:
+The project focuses on deploying PostgreSQL using Docker and Docker Compose. 
+It includes tools and scripts for:
 - Downloading and preparing NYC Taxi data.
 - Ingesting data into a PostgreSQL database.
 - Querying the data using pgAdmin and command-line tools.
+
+The data pipeline itself is in a Docker container (Dockerfile) and the
+project orchestration, consisting of the PostGreSQL DB and a PGAdmin UI, is in a
+Docker Compose services setup.
 
 ---
 
@@ -33,8 +38,15 @@ The project focuses on deploying PostgreSQL using Docker and Docker Compose. It 
 ### Prerequisites
 - Docker and Docker Compose must be installed on your system.
 - Python 3.9+ should be available if running scripts locally.
+- Install Python Venv
+- Gitignored files (in order to not occupy too much space in Github):
+ny_taxi_postgres_data/              # Scaffolded pstgres db
+.venv/                              # Python Virtual Env
+yellow_tripdata_2021-01.csv         # 
+.ipynb_checkpoints/
 
-### Clone the Repository
+
+### (Optional) Clone the Repository for reference
 ```bash
 git clone https://github.com/DataTalksClub/data-engineering-zoomcamp.git
 cd data-engineering-zoomcamp/01-docker-terraform/2_docker_sql
