@@ -21,6 +21,9 @@ This project demonstrates how to set up a PostgreSQL database with Docker, inges
 
 ## Overview
 
+NOTE: Present Situation: Finished "Ingesting NY Taxi Data to Postgres", going to "Connecting pgAdmin and Postgres"
+https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main/01-docker-terraform
+
 The project focuses on deploying PostgreSQL using Docker and Docker Compose. 
 It includes tools and scripts for:
 - Downloading and preparing NYC Taxi data.
@@ -79,6 +82,10 @@ services:
 2. Start the services:
 ```bash
 docker-compose up -d
+```
+3. Interact with the DB via pgcli:
+```bash
+pgcli -h localhost -p 5432 -u root -d ny_taxi
 ```
 
 ### Build the Docker Image for Data Ingestion
